@@ -36,12 +36,6 @@ sed -i 's/enabled = 1/enabled = 0/g' /etc/yum.repos.d/rpmforge.repo
 sed -i -e "/^\[remi\]/,/^\[.*\]/ s|^\(enabled[ \t]*=[ \t]*0\\)|enabled=1|" /etc/yum.repos.d/remi.repo
 rm -f *.rpm
 
-fi
-
-sed -i 's/enabled = 1/enabled = 0/g' /etc/yum.repos.d/rpmforge.repo
-sed -i -e "/^\[remi\]/,/^\[.*\]/ s|^\(enabled[ \t]*=[ \t]*0\\)|enabled=1|" /etc/yum.repos.d/remi.repo
-rm -f *.rpm
-
 # remove unused
 yum -y remove sendmail;
 yum -y remove httpd;
