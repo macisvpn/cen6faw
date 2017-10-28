@@ -18,18 +18,25 @@ sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.d/rc.loca
 # install wget and curl
 yum -y install wget curl
 
-# setting repo
-wget http://script.fawzya.net/centos/app/epel-release-6-8.noarch.rpm
-wget http://script.fawzya.net/centos/app/remi-release-6.rpm
+# set repo
+wget http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
 rpm -Uvh epel-release-6-8.noarch.rpm
 rpm -Uvh remi-release-6.rpm
 
+OS=`uname -m`;
 if [ "$OS" == "x86_64" ]; then
-  wget http://script.fawzya.net/centos/app/rpmforge.rpm
-  rpm -Uvh rpmforge.rpm
+  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+  rpm -Uvh rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
 else
-  wget http://script.fawzya.net/centos/app/rpmforge.rpm
-  rpm -Uvh rpmforge.rpm
+  wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.i686.rpm
+  rpm -Uvh rpmforge-release-0.5.3-1.el6.rf.i686.rpm
+fi
+
+sed -i 's/enabled = 1/enabled = 0/g' /etc/yum.repos.d/rpmforge.repo
+sed -i -e "/^\[remi\]/,/^\[.*\]/ s|^\(enabled[ \t]*=[ \t]*0\\)|enabled=1|" /etc/yum.repos.d/remi.repo
+rm -f *.rpm
+
 fi
 
 sed -i 's/enabled = 1/enabled = 0/g' /etc/yum.repos.d/rpmforge.repo
@@ -51,11 +58,10 @@ service php-fpm restart
 chkconfig nginx on
 chkconfig php-fpm on
 
-# install essential package
-yum -y install rrdtool screen iftop htop nmap bc nethogs openvpn vnstat ngrep mtr git zsh mrtg unrar rsyslog rkhunter mrtg net-snmp net-snmp-utils expect nano bind-utils
+# Install Essential Package
+yum -y install wondershaper rrdtool screen iftop htop nmap bc nethogs openvpn vnstat ngrep mtr git zsh mrtg unrar rsyslog rkhunter mrtg net-snmp net-snmp-utils expect nano bind-utils
 yum -y groupinstall 'Development Tools'
 yum -y install cmake
-
 yum -y --enablerepo=rpmforge install axel sslh ptunnel unrar
 
 # matiin exim
@@ -200,9 +206,9 @@ chkconfig squid on
 
 # install webmin
 cd
-wget http://script.fawzya.net/centos/app/webmin-1.670-1.noarch.rpm
-rpm -U webmin-1.670-1.noarch.rpm
-rm webmin-1.670-1.noarch.rpm
+wget http://download.webmin.com/download/yum/webmin-1.850-1.noarch.rpm
+rpm -U webmin-1.850-1.noarch.rpm
+rm webmin-1.850-1.noarch.rpm
 service webmin restart
 chkconfig webmin on
 
